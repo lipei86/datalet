@@ -1,0 +1,13 @@
+target
+.vs
+__pycache__
+tmp
+*.egg-info
+dist
+build
+*.*~
+*.pyc
+*.class
+datalet/olap/java/bin/
+*.log
+./logging-default.cfg

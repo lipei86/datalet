@@ -10,7 +10,7 @@ import unittest
 from tests.testing import Testing
 import datalet.utils.datetime_utils as datetime_utils
 
-class DatetimeUtilsTesting(Testing):
+class DatetimeUtilsTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass

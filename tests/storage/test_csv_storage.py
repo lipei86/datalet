@@ -11,11 +11,11 @@ import os
 import unittest
 
 from datalet.storage import *
-from tests.testing import Testing
+import datalet.utils.inspect_utils as inspect_utils
 
 #sys.setdefaultencoding('utf8')
 
-class CsvStorageTest(Testing):
+class CsvStorageTest(unittest.TestCase):
 
 	def setUp(self):
 		self.tmpdir = r"tests/test_data/tmp/"
@@ -27,14 +27,14 @@ class CsvStorageTest(Testing):
 		pass
 
 	def test_create_file_not_exists(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
 		s.remove(force = True)
 
 	def test_create_file_exists(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
@@ -44,7 +44,7 @@ class CsvStorageTest(Testing):
 
 
 	def test_create_file_exists_force(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
@@ -66,7 +66,7 @@ class CsvStorageTest(Testing):
 		self.assertTrue(len(dat) == 5)
 
 	def test_write_append(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		if not s.exists():
 			s.create()
@@ -75,7 +75,7 @@ class CsvStorageTest(Testing):
 
 
 	def test_write_overwrite(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
@@ -83,19 +83,19 @@ class CsvStorageTest(Testing):
 		s.write(data = dat, overwrite = True)
 
 	def test_copy(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
 		dat = [["a1", "b1", "c1"],[1, 2, 3]]
 		s.write(data = dat, overwrite = True)
 		s.copy()
-		newfilename = self.classname + self.separator + self.get_func_name() + FileStorage.POSTFIX + self.ext
+		newfilename = self.classname + self.separator + inspect_utils.get_current_func_name() + FileStorage.POSTFIX + self.ext
 		self.assertTrue(os.path.exists(self.tmpdir + newfilename))
 		s.remove()
 
 	def test_copy_path(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
+		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		s.remove(force = True)
 		s.create()
@@ -117,20 +117,3 @@ class CsvStorageTest(Testing):
 
 	def test_clear(self):
 		pass
-
-
-def suite():
-	suite = unittest.TestSuite()
-	#suite.addTest(CsvStorageTest("test_create_file_not_exists"))
-	#suite.addTest(CsvStorageTest("test_create_file_exists"))
-	#suite.addTest(CsvStorageTest("test_create_file_exists_force"))
-	suite.addTest(CsvStorageTest("test_read"))
-	#suite.addTest(CsvStorageTest("test_read_limit"))
-	#suite.addTest(CsvStorageTest("test_write_append"))
-	#suite.addTest(CsvStorageTest("test_write_overwrite"))
-	#suite.addTest(CsvStorageTest("test_copy"))
-	#suite.addTest(CsvStorageTest("test_copy_path"))
-	return suite
-
-if __name__ == "__main__":
-	unittest.main(defaultTest = "suite")

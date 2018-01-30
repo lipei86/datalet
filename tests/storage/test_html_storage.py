@@ -10,7 +10,7 @@ import unittest
 from datalet.storage import *
 from tests.testing import Testing
 
-class HtmlStorageTest(Testing):
+class HtmlStorageTest(unittest.TestCase):
 
 	def setUp(self):
 		self.tmpdir = r"tests/test_data/tmp/"
@@ -21,11 +21,11 @@ class HtmlStorageTest(Testing):
 	def tearDown(self):
 		pass
 
-	def test_read(self):
-		s = HtmlStorage(r"tests/test_data/test.html")
-		dat = s.read()
-		print(dat)
-		self.assertTrue(len(dat) > 0)
+	# def test_read(self):
+	# 	s = HtmlStorage(r"tests/test_data/test.html")
+	# 	dat = s.read()
+	# 	print(dat)
+	# 	self.assertTrue(len(dat) > 0)
 
 def suite():
 	suite = unittest.TestSuite()

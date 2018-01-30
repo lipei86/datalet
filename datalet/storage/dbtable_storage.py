@@ -38,7 +38,7 @@ class DbTableStorage(Storage):
 			if force == True:
 				self.remove(force = True)
 			else:
-				raise StorageExistsError(self.location)
+				raise StorageExistedError(self.location)
 		# create
 		if not self.__exists_schema(self.table.schema):
 			self.engine.execute(CreateSchema(self.table.schema))

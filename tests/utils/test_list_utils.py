@@ -10,7 +10,7 @@ import unittest
 from tests.testing import Testing
 import datalet.utils.list_utils as list_utils
 
-class ListUtilsTesting(Testing):
+class ListUtilsTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass

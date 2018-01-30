@@ -9,21 +9,21 @@ from datalet.storage.html_storage import HtmlStorage
 
 class EmlStorage(TextFileStorage):
 
-	def __init__(self, filepath = None):
-		super().__init__(filepath)
+	def __init__(self, location = None):
+		super().__init__(location)
 
 	def write(self, data, overwrite = True):
 		raise NotImplementedError
 
 	def read(self, limit = -1, encoding = "utf-8"):
 		html = self.__get_html(encoding = encoding)
-		hs = HtmlStorage(filepath = None, content = html)
+		hs = HtmlStorage(location = None, content = html)
 		tables = hs.read(limit = limit, encoding = encoding)
 		return tables
 
 	def __get_html(self, encoding):
 		html = None
-		with open(self.filepath, encoding = encoding) as file:
+		with open(self.location, encoding = encoding) as file:
 			msg = email.message_from_file(file)
 			for part in msg.walk():
 				if not part.is_multipart():

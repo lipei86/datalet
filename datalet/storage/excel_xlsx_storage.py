@@ -9,66 +9,63 @@ from openpyxl import load_workbook
 
 from datalet.data import *
 from datalet.storage.bin_file_storage import BinFileStorage
-from datalet.storage.exceptions import (StorageExistsError
-	, StorageNotFoundError
-	, UnmatchExtensionError
-	, ArgumentsAbsenceError)
+from datalet.storage.exceptions import *
 
 
-class Excel2007Storage(BinFileStorage):
+class ExcelXlsxStorage(BinFileStorage):
 	"""
 	Excel 2007 format Storage
 	"""
 
 
-	def __init__(self, filepath = None, sheetIndex = -1, sheetName = None):
-		super().__init__(filepath)
-		self.sheetIndex = sheetIndex
-		self.sheetName = sheetName
+	def __init__(self, location = None, sheet_index = -1, sheet_name = None):
+		super().__init__(location)
+		self.sheet_index = sheet_index
+		self.sheet_name = sheet_name
 
 
 	def __get_worksheet(self, workbook_toread):
 		ws = None
-		if not self.sheetName is None:
-			ws = workbook_toread.get_sheet_by_name(self.sheetName)
+		if not self.sheet_name is None:
+			ws = workbook_toread.get_sheet_by_name(self.sheet_name)
 		else:
-			if not self.sheetIndex is None:
-				ws = workbook_toread.get_sheet_by_name(workbook_toread.get_sheet_names()[self.sheetIndex])
+			if not self.sheet_index is None:
+				ws = workbook_toread.get_sheet_by_name(workbook_toread.get_sheet_names()[self.sheet_index])
 			else:
-				raise ArgumentsAbsenceError("The targetSheet arguments must be specified one:  sheetIndex=%s, sheetName=%s" % \
-					(self.sheetIndex, self.sheetName))
+				raise ArgumentsAbsenceError("The targetSheet arguments must be specified one:  sheet_index=%s, sheet_name=%s" % \
+					(self.sheet_index, self.sheet_name))
 		return ws
 
 
 	def create(self, force = False):
 		if self.exists():
 			if force == False:
-				raise StorageExistsError(self.filepath)
+				raise StorageExistsError(self.location)
 			else:
 				self.remove(force = True)
 
 		wb = Workbook()
-		createSheetName = self.sheetName if self.sheetName is not None else ("SHEET_" + str(self.sheetIndex))
-		wb.create_sheet(title =createSheetName)
-		wb.save(self.filepath)
+		new_sheet_name = self.sheet_name if self.sheet_name is not None else ("SHEET_" + str(self.sheet_index))
+		wb.create_sheet(title = new_sheet_name)
+		wb.save(self.location)
 
 
 	def clear(self, force = False):
-		wb = load_workbook(filename = self.filepath)
+		wb = load_workbook(filename = self.location)
 		ws = self.__get_worksheet(wb)
 		wb.remove(ws)
-		createSheetName = self.sheetName if self.sheetName is not None else ("SHEET_" + str(self.sheetIndex))
-		wb.create_sheet(title =createSheetName)
-		wb.save(self.filepath)
+		new_sheet_name = self.sheet_name if self.sheet_name is not None else ("SHEET_" + str(self.sheet_index))
+		wb.create_sheet(title = new_sheet_name)
+		wb.save(self.location)
 
 
-	def read(self, limit =  -1, data_only = True, read_only = True):
+	def read(self, limit =  -1, data_only = True, read_only = True, encoding='utf-8'):
 		dt = DataTable()
 		'''
 		read_only: set True when read large file.
 		data_only: set True when need calculate the formatular.
 		'''
-		wb = load_workbook(filename = self.filepath, data_only = data_only, read_only = read_only)
+		wb = load_workbook(filename = self.location, data_only = data_only, read_only = read_only)
 		ws = self.__get_worksheet(wb)
 
 		for row in ws.rows:
@@ -105,7 +102,7 @@ class Excel2007Storage(BinFileStorage):
 				# data = old_data
 			#self.remove(force = True)
 			wb = Workbook(write_only = True)
-			ws = wb.create_sheet(title = self.sheetName)
+			ws = wb.create_sheet(title = self.sheet_name)
 			if write_header == True:
 				ws.append(data.column_names)
 			for row in data:
@@ -121,9 +118,9 @@ class Excel2007Storage(BinFileStorage):
 					print(row)
 					print(e)
 					raise e
-			wb.save(self.filepath)
+			wb.save(self.location)
 		else:
-			wb = load_workbook(filename = self.filepath)
+			wb = load_workbook(filename = self.location)
 			ws = self.__get_worksheet(wb)
 			datarow_start_index = 1
 			if write_header == True:
@@ -136,4 +133,4 @@ class Excel2007Storage(BinFileStorage):
 				for colIndex in range(0, len(rowdata)):
 					celldata = rowdata[colIndex]
 					ws.cell(row = rowIndex + datarow_start_index, column = colIndex + 1).value = celldata
-			wb.save(self.filepath)
+			wb.save(self.location)

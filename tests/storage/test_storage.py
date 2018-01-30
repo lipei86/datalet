@@ -13,7 +13,7 @@ from datalet.storage import *
 from tests.testing import Testing
 
 
-class StorageTest(Testing):
+class StorageTest(unittest.TestCase):
 
 	def setUp(self):
 		pass

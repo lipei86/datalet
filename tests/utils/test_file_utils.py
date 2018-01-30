@@ -10,7 +10,7 @@ import unittest
 from tests.testing import Testing
 import datalet.utils.file_utils as fus
 
-class FileUtilsTesting(Testing):
+class FileUtilsTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass
@@ -18,18 +18,18 @@ class FileUtilsTesting(Testing):
 	def tearDown(self):
 		pass
 
-	def test_read_text_file_utf8(self):
+	def test_try_read_utf8(self):
 		sql_ch_filepath = r"tests/test_data/sql_ch_utf8.sql"
-		sql_text = fus.read_text_file(sql_ch_filepath)
+		sql_text = fus.try_read(sql_ch_filepath)
 		print(sql_text)
 
-	def test_read_text_file_gb2312(self):
+	def test_try_read_gb2312(self):
 		sql_ch_filepath = r"tests/test_data/sql_ch_gb2312.sql"
-		sql_text = fus.read_text_file(sql_ch_filepath,encoding = "gb2312")
+		sql_text = fus.try_read(sql_ch_filepath)
 		print(sql_text)
 
-	def test_get_exec_file_path(self):
-		print(fus.get_exec_file_path())
+	# def test_get_exec_file_path(self):
+	# 	print(fus.get_exec_file_path())
 
 	def test_convert_encoding(self):
 		saved_filepath = fus.convert_encoding(r"tests/test_data/sql_ch_gb2312.sql", inplace = False)

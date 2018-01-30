@@ -12,7 +12,7 @@ import unittest
 from datalet.storage import *
 from tests.testing import Testing
 
-class FileStorageTest(Testing):
+class FileStorageTest(unittest.TestCase):
 
 	def setUp(self):
 		pass

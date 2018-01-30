@@ -8,12 +8,12 @@ from html.parser import HTMLParser
 
 from datalet.data import *
 from datalet.storage.text_file_storage import TextFileStorage
-from datalet.storage.exceptions import ArgumentsAbsenceError
+from datalet.storage.exceptions import *
 
 class HtmlStorage(TextFileStorage):
 
-    def __init__(self, filepath = None, content = None):
-        super().__init__(filepath)
+    def __init__(self, location = None, content = None):
+        super().__init__(location)
         self.content = content
 
     def write(self, data, overwrite = True):
@@ -24,12 +24,12 @@ class HtmlStorage(TextFileStorage):
         if self.content is not None:
             htmlContent = self.content
         else:
-            if self.filepath is not None:
-                 with open(self.filepath, "r", encoding = encoding) as file:
+            if self.location is not None:
+                 with open(self.location, "r", encoding = encoding) as file:
                     htmlContent = file.read()
             else:
-                raise ArgumentsAbsenceError("The follow arguments must be specified one:  filepath=%s, content=%s" % \
-                    (self.filepath, self.content))
+                raise ArgumentsAbsenceError("The follow arguments must be specified one:  location=%s, content=%s" % \
+                    (self.location, self.content))
 
         htmlParser = SimpleHtmlParser()
         htmlParser.feed(htmlContent)

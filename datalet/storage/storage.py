@@ -6,70 +6,109 @@ from abc import ABCMeta,abstractmethod
 class Storage(object, metaclass = ABCMeta):
 
 	def __init__(self, location):
-		"""
-		When the storage is a file, the location is filepath;
-		When the storage is a database, the location is database connection info directory;
+		"""Init an storage.
+
+		Args:
+			location:
+				When the storage is a file, the location is filepath;
+				When the storage is a database, the location is sqlalchemy url.
 		"""
 		self.location = location
 
 	@abstractmethod
 	def exists(self):
-		"""
-		Return True if the storage is existing, otherwise return False.
+		"""Return True if the storage is existing, otherwise return False.
+
+		Returns:
+			Boolean
 		"""
 		pass
 
 	@abstractmethod
-	def create(self, force = False):
-		"""
-		When the storage is not existing, a new storage will be created;
-		When the storage is existing and force is False, a StorageExistsError will be raised;
-		When the storage is existing and force is True, the old storage will be removed(cascade) firstly and then a new one will be created. 
+	def create(self, force = True):
+		"""Create a storage.
+
+		Args:
+			force:
+				The storage will remove the old one and create a new one if force is True when the storage is existed otherwise raise a StorageExistedError.
+
+		Returns:
+			None
+
+		Raises:
+
 		"""
 		pass
 
 	@abstractmethod
 	def clear(self, force = False):
-		"""
-		When the storage is not existing and force is False, a StorageNotFoundError will be raised;
-		When the storage is not existing and force is True, nothing will be done;
-		When the storage has no foreign relation, the storage will be cleared directly;
-		When the storage has foreign relations and force is False, a ForeignRelationExistsError will be raised;
-		When the storage has foreign relations and force is True, the storage will be cleared cascade.
+		"""Clear the conent of storage.
+
+		Args:
+			force:
+				The storage will be cleared cascadely if force is True when the storage has foreign relations, otherwise raise a ForeignRelationExistedError;
+			 	The storage will do nothing if force is True when the storage is not existed otherwise raise a StorageNotFoundError.
+
+		Returns:
+			None
 		"""
 		pass
 
 	@abstractmethod
 	def remove(self, force = False):
-		"""
-		When the storage is not existing and force is False, a StorageNotFoundError will be raised;
-		When the storage is not existing and force is True, nothing will be done;
-		When the storage has no foreign relation, the storage will be removed directly;
-		When the storage has foreign relations and force is False, a ForeignRelationExistsError will be raised;
-		When the storage has foreign relations and force is True, the storage will be removed cascade.
+		"""Remove the storage.
+
+		Args:
+			force:
+				The storage will be removed cascadely if force is True when the storage has foreign relations, otherwise raise a ForeignRelationExistedError;
+				The storage will do nothing if force is True when the storage is not existed otherwise raise a StorageNotFoundError.
+
+		Returns:
+			None
 		"""
 		pass
 
 	@abstractmethod
-	def write(self, data, overwrite = False, write_header = True):
-		"""
-		When the overwrite is False, the data will be appended to the end of the storage;
-		When the overwrite is True, the storage will be cleared(cascade) firstly and then the data will be writed to the storage;
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8'):
+		"""Write data to the storage.
+
+		Args:
+			data:
+				The data to write. The data's type is DataTable(datalet.data.DataTable).
+			force:
+				The storage will be created if force is True when the storage is not existed otherwise raise a StorageNotFoundError.
+			overwrite:
+				Whether overwrite the existing data.
+			include_header:
+				Whether include the header if the data has header.
+
+		Returns:
+			None
 		"""
 		pass
 
 	@abstractmethod
-	def read(self, limit = -1):
-		"""
-		When the limit equals -1, will return all data in the storage;
-		WHen the limit is specified a limit number, will return the limit number rows data.
+	def read(self, limit = None, encoding = 'utf-8'):
+		"""Read data from the storage.
+
+		Args:
+			limit:
+				Read all rows if limit is None, otherwise read the limit rows data.
+
+		Returns:
+			DataTable(datalet.data.DataTable)
 		"""
 		pass
 
 	@abstractmethod
-	def copy(self, path = None):
-		"""
-		When name is None, the default name is ( oldname + "_copy" );
-		When name is not None, use the specified name.
+	def copy(self, copy_to_path = None):
+		"""Copy the storage.
+
+		Args:
+			copy_to_path:
+				The path to copy.
+
+		Returns:
+			None
 		"""
 		pass

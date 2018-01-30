@@ -4,39 +4,36 @@
 import os.path
 
 from datalet.storage.bin_file_storage import BinFileStorage
-from datalet.storage.excel_2003_storage import Excel2003Storage
-from datalet.storage.excel_2007_storage import Excel2007Storage
-from datalet.storage.exceptions import (StorageExistsError
-	, StorageNotFoundError
-	, UnmatchExtensionError
-	, ArgumentsAbsenceError)
+from datalet.storage.excel_xls_storage import ExcelXlsStorage
+from datalet.storage.excel_xlsx_storage import ExcelXlsxStorage
+from datalet.storage.exceptions import *
 
 
 class ExcelStorage(BinFileStorage):
 
-	def __init__(self, filepath = None, sheetIndex = -1, sheetName = None):
-		super().__init__(filepath)
+	def __init__(self, location = None, sheet_index = None, sheet_name = None):
+		super().__init__(location)
 
-		ext = self.filepath.split(".")[-1].upper()
+		ext = self.location.split(".")[-1].upper()
 		if ext == "XLS":
-			self.excelStorage = Excel2003Storage(filepath = filepath, sheetIndex = sheetIndex, sheetName = sheetName)
+			self.excel_storage = ExcelXlsStorage(location = location, sheet_index = sheet_index, sheet_name = sheet_name)
 		elif ext == "XLSX":
-			self.excelStorage = Excel2007Storage(filepath = filepath, sheetIndex = sheetIndex, sheetName = sheetName)
+			self.excel_storage = ExcelXlsxStorage(location = location, sheet_index = sheet_index, sheet_name = sheet_name)
 		else:
-			raise UnmatchExtensionError(self.filepath)
+			raise UnmatchExtensionError(ext)
 
 
 	def create(self, force = False):
-		return self.excelStorage.create(force = force)
+		return self.excel_storage.create(force = force)
 
 
 	def clear(self, force = False):
-		return self.excelStorage.clear(force = force)
+		return self.excel_storage.clear(force = force)
 
 
-	def write(self, data, overwrite = False):
-		return self.excelStorage.write(data = data, overwrite = overwrite)
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8'):
+		return self.excel_storage.write(data = data, force = force, overwrite = overwrite, include_header = include_header, encoding = encoding)
 
 
-	def read(self, limit = -1):
-		return self.excelStorage.read(limit = limit)
+	def read(self, limit = None, encoding = 'utf-8'):
+		return self.excel_storage.read(limit = limit, encoding = encoding)

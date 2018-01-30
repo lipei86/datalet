@@ -11,7 +11,7 @@ from datalet.logging import *
 import unittest
 from tests.testing import Testing
 
-class LoggerTesting(Testing):
+class LoggerTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass

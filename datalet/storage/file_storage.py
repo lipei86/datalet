@@ -6,42 +6,52 @@ import os.path
 from abc import ABCMeta,abstractmethod
 
 from datalet.storage.storage import Storage
-from datalet.storage.exceptions import *
+from datalet.exceptions import *
 
 class FileStorage(Storage, metaclass = ABCMeta):
 
-	POSTFIX = "$COPY"
+	def __init__(self, location = None):
+		"""Init FileStorage
 
-	def __init__(self, filepath = None):
-		super().__init__(filepath)
-		self.filepath = self.location
+		Args:
+			location: the location is location.
+		"""
+		super().__init__(location)
 
 
 	def exists(self):
-		return os.path.exists(self.filepath)
+		"""
+		See Storage's notes.
+		"""
+		return os.path.exists(self.location)
 
 
 	def remove(self, force = False):
+		"""
+		See Storage's notes.
+		"""
 		if not self.exists():
 			if force == False:
-				raise StorageNotFoundError(self.filepath)
+				raise StorageNotFoundError(self.location)
+			else:
+				# do nothing.
+				pass
 		else:
-			os.remove(self.filepath)
+			os.remove(self.location)
 
 
-	def copy(self, path = None):
+	def copy(self, copy_to_path = None):
+		"""
+		See Storage's notes.
+		"""
 		if not self.exists():
-			raise StorageNotFoundError(self.filepath)
+			raise StorageNotFoundError(self.location)
+		if copy_to_path is None:
+			raise ArgumentsAbsenceError('copy_to_path')
+
 		import shutil
-		if path is not None:
-			shutil.copyfile(self.filepath, path)
-		else:
-			newname = None
-			dirname = os.path.dirname(self.filepath)
-			filename = os.path.basename(self.filepath)
-			sections = filename.split(".")
-			newname = sections[0] + FileStorage.POSTFIX + "." + sections[1] if len(sections) == 2 else sections[0] + FileStorage.POSTFIX
-			shutil.copyfile(self.filepath, dirname + os.path.sep + newname)
+		shutil.copyfile(self.location, copy_to_path)
+
 
 	@abstractmethod
 	def create(self, force = False):
@@ -52,9 +62,9 @@ class FileStorage(Storage, metaclass = ABCMeta):
 		pass
 
 	@abstractmethod
-	def write(self, data, overwrite = False):
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8'):
 		pass
 
 	@abstractmethod
-	def read(self, limit = -1):
+	def read(self, limit = None, encoding = 'utf-8'):
 		pass

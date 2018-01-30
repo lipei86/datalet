@@ -11,7 +11,7 @@ from datalet.data import *
 import unittest
 from tests.testing import Testing
 
-class DataColumnTesting(Testing):
+class DataColumnTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass

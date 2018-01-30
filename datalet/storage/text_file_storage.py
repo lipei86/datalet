@@ -13,31 +13,35 @@ class TextFileStorage(FileStorage, metaclass = ABCMeta):
 	text file
 	"""
 
-	def __init__(self, filepath = None):
-		super().__init__(filepath)
-		self.filepath = self.location
+	def __init__(self, location = None):
+		super().__init__(location)
 
 
 	def create(self, force = False):
-		# if the file existed
+		"""
+		See Storage's notes.
+		"""
 		if self.exists():
 			if force == False:
-				raise StorageExistsError(self.filepath)
+				raise StorageExistedError(self.location)
 			else:
 				self.remove(force = True)
 
-		(head, tail) = os.path.split(self.filepath)
+		(head, tail) = os.path.split(self.location)
 		if head != "" and (not os.path.exists(head)):
 			os.makedirs(head)
-		with open(self.filepath, "w") as file:
+		with open(self.location, "w", encoding="utf-8") as file:
 			pass
 
 
 	def clear(self, force = False):
+		"""
+		See Storage's notes.
+		"""
 		if not self.exists():
 			if force == False:
-				raise StorageNotFoundError(self.filepath)
-		with open(self.filepath, "w", encoding="utf-8") as file:
+				raise StorageNotFoundError(self.location)
+		with open(self.location, "w", encoding="utf-8") as file:
 			file.truncate()
 
 

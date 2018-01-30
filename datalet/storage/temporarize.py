@@ -25,7 +25,7 @@ class Temporarize(object):
 			if location is not None:
 				if kwargs is None or len(kwargs) == 0:
 					kwargs = {}
-				kwargs["filepath"] = location
+				kwargs["location"] = location
 				kwargs["force"] = True
 				if isinstance(location, str):
 					construct_func = get_storage_func(location)
@@ -35,7 +35,7 @@ class Temporarize(object):
 					#self.storage = sfd.create_db(
 					raise NotImplementedError()
 			else:
-				raise ArgumentsAbsenceError("storage and filepath must be specified one.")
+				raise ArgumentsAbsenceError("storage and location must be specified one.")
 
 	def __enter__(self):
 		return self.storage

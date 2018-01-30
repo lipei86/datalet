@@ -11,7 +11,7 @@ from actlet.olap import *
 from tests.testing import Testing
 from py4j.java_gateway import JavaGateway, GatewayParameters
 
-class ClientTesting(Testing):
+class ClientTesting(unittest.TestCase):
 
 	def setUp(self):
 		pass

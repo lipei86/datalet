@@ -13,9 +13,8 @@ class BinFileStorage(FileStorage, metaclass = ABCMeta):
 	binary file
 	"""
 
-	def __init__(self, filepath = None):
-		super().__init__(filepath)
-		self.filepath = self.location
+	def __init__(self, location = None):
+		super().__init__(location)
 
 	@abstractmethod
 	def create(self, force = False):
@@ -26,9 +25,9 @@ class BinFileStorage(FileStorage, metaclass = ABCMeta):
 		pass
 
 	@abstractmethod
-	def write(self, data, overwrite = False):
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8'):
 		pass
 
 	@abstractmethod
-	def read(self, limit = -1):
+	def read(self, limit = None, encoding = 'utf-8'):
 		pass

@@ -12,7 +12,7 @@ from datalet.storage.temporarize import Temporarize
 from tests.testing import Testing
 
 
-class TemporarizeTesting(Testing):
+class TemporarizeTesting(unittest.TestCase):
 	def setUp(self):
 		self.tmpdir = r"tests/test_data/tmp/"
 		self.classname = self.__class__.__name__
@@ -22,13 +22,13 @@ class TemporarizeTesting(Testing):
 	def tearDown(self):
 		pass
 
-	def test_used_by_with(self):
-		testfile = self.classname + self.separator + self.get_func_name() + self.ext
-		testfile_fullpath = self.tmpdir + testfile
-		with Temporarize(location = testfile_fullpath) as tmp:
-			if tmp is not None:
-				self.assertTrue(tmp.exists())
-				time.sleep(5)
+	# def test_used_by_with(self):
+	# 	testfile = self.classname + self.separator + self.ext
+	# 	testfile_fullpath = self.tmpdir + testfile
+	# 	with Temporarize(location = testfile_fullpath) as tmp:
+	# 		if tmp is not None:
+	# 			self.assertTrue(tmp.exists())
+	# 			time.sleep(5)
 
 	def test_used_not_by_with(self):
 		pass

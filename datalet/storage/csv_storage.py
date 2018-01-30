@@ -6,23 +6,27 @@ import os.path
 
 from datalet.data import *
 from datalet.storage.text_file_storage import TextFileStorage
-from datalet.storage.exceptions import (StorageExistsError
-	, StorageNotFoundError)
+from datalet.storage.exceptions import *
 
 class CsvStorage(TextFileStorage):
 
-	def __init__(self, filepath):
-		super().__init__(filepath)
+	def __init__(self, location):
+		super().__init__(location)
 
-	def __replace_symbols(self, data):
-		return str(data).replace('\n', '\t').replace(',', '.') if data is not None else ''
 
-	def write(self, data, overwrite = False, encoding = "utf-8", write_header = True):
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8'):
+		"""
+		See Storage's notes.
+		"""
 		if not self.exists():
-			raise StorageNotFoundError(self.filepath)
+			if force == True:
+				self.create(force = True)
+			else:
+				raise StorageNotFoundError(self.location)
+
 		openmode = "a" if overwrite == False else "w"
-		with open(self.filepath, openmode, encoding = encoding) as file:
-			if write_header == True:
+		with open(self.location, openmode, encoding = encoding) as file:
+			if include_header == True:
 				file.write(','.join(data.column_names))
 				file.write('\n')
 			for row in data:
@@ -30,15 +34,26 @@ class CsvStorage(TextFileStorage):
 				file.write('\n')
 
 
-	def read(self, limit = -1, encoding = "utf-8"):
+	def read(self, limit = None, encoding = "utf-8"):
+		"""
+		See Storage's notes.
+		"""
 		if not self.exists():
-			raise StorageNotFoundError(self.filepath)
+			raise StorageNotFoundError(self.location)
+
 		dt = DataTable()
-		with open(self.filepath, "r", encoding = encoding) as file:
+		with open(self.location, "r", encoding = encoding) as file:
 			line_index = 0
 			for line in file.readlines():
-				if limit != -1 and line_index >= limit:
+				if limit is not None and line_index >= limit:
 					break
 				dt.append(line.rstrip('\n').split(','))
 				line_index += 1
 		return dt
+
+	def __replace_symbols(self, data):
+		"""
+		Replace some symbols in table cell.
+
+		"""
+		return str(data).replace('\n', '\t').replace(',', '.') if data is not None else ''

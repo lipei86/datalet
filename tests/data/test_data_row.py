@@ -11,7 +11,7 @@ from datalet.data import *
 import unittest
 from tests.testing import Testing
 
-class DataRowTesting(Testing):
+class DataRowTesting(unittest.TestCase):
 	def setUp(self):
 		pass
 

@@ -19,62 +19,76 @@ class DataTableTesting(unittest.TestCase):
 	def tearDown(self):
 		pass
 
+	def test_init(self):
+		dt1 = DataTable()
+
 	def test_integer_index(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [ DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(["lisi", "girl", 30])
 		dt.append(["wangwu", "boy", 33])
-
-		#self.assertTrue(dt[1].name == "lisi")
+		self.assertTrue(dt[1]["sex"] == "girl")
 
 	def test_iter(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [ DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(["lisi", "girl", 30])
 		dt.append(["wangwu", "boy", 33])
 
+		ret_column_names = []
 		for col in dt.columns:
-			print("column's name: " , col.name)
+			ret_column_names.append(col.name)
+		self.assertTrue(ret_column_names == ['name', 'sex', 'age'])
 
+		ret_rows_data = []
 		for row in dt:
+			row_data = []
 			for data in row:
-				print(data)
+				row_data.append(data)
+			ret_rows_data.append(row_data)
+		self.assertTrue(len(ret_rows_data) == 3)
 
 	def test_to_dict(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [ DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(["lisi", "girl", 30])
 		dt.append(["wangwu", "boy", 33])
 		dt.append(["zhaoqi", None, None])
-		print(list(dt.to_dict()))
+		self.assertTrue(isinstance(list(dt.to_dict())[0], dict))
 
 
 	def test_append_row(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [ DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(("lisi", "girl", 30))
 		dt.append({"name":"wangwu", "sex":"boy", "age":33})
 		dt.append(["zhaoqi", None, None])
-		print(list(dt.to_dict()))
+		self.assertTrue(isinstance(list(dt.to_dict())[0], dict))
 
 
 	def test_get_data_by_column(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(("lisi", "girl", 30))
 		dt.append({"name":"wangwu", "sex":"boy", "age":33})
 		dt.append(["zhaoqi", None, None])
-		print(list(dt["name"]))
+		self.assertTrue(list(dt["name"]) == ['zhangsan', 'lisi', 'wangwu', 'zhaoqi'])
 
 	def test_del_data_by_index(self):
-		dt = DataTable("mytable", DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age"))
+		dt = DataTable("mytable", [DataColumn("name"), DataColumn(name = "sex"), DataColumn(name = "age")])
 		dt.append(["zhangsan", "boy", 24])
 		dt.append(("lisi", "girl", 30))
 		dt.append({"name":"wangwu", "sex":"boy", "age":33})
 		dt.append(["zhaoqi", None, None])
-		print(len(dt))
+		self.assertTrue(len(dt) == 4)
 		del dt[0]
-		print(len(dt))
+		self.assertTrue(len(dt) == 3)
+
+
+	def test_from_list(self):
+		ls = [['name', 'age'], ['zhangsan', 29]]
+		dt = DataTable.from_list(src_list = ls)
+		self.assertTrue(dt[0]['name'] == 'zhangsan')
 
 
 def suite():

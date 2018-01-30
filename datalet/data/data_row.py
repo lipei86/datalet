@@ -7,7 +7,16 @@ from datalet.data.exceptions import *
 
 class DataRow(object):
 
-	def __init__(self, owner_table = None, *data):
+	def __init__(self, owner_table = None, data = []):
+		"""
+		data can be a list
+
+		Args:
+			owner_table:
+				Parent table.
+			data:
+				Row's data.
+		"""
 		self.__owner_table = owner_table
 		self.__data = list(data) if data is not None else []
 
@@ -46,10 +55,10 @@ class DataRow(object):
 		if isinstance(key, str):
 			column_index = self.__owner_table.get_column_index(key)
 			return self.__data[column_index]
-		elif isinstance(self, int):
+		elif isinstance(key, int) or isinstance(key, slice):
 			return self.__data[key]
 		else:
-			raise ArgumentTypeError(key, "must be str or int type")
+			raise ArgumentTypeError(key, "must be str or int or slice type")
 
 
 	def __setitem__(self, key, value):

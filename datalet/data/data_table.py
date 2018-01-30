@@ -8,17 +8,70 @@ from datalet.data.data_row import DataRow
 from datalet.data.exceptions import *
 
 class DataTable(object):
-	'''
+	"""
 	DataTable is read schema.
 	It can stores the data in any format, but use the schema validating on read.
-	'''
 
-	def __init__(self, name = None, *columns):
+	EXAMPLE:
+
+	Create DataTable:
+		# create from list of list
+		dt = DataTable(list_of_list, header_rows = 1)
+
+		# create from list of dict
+		dt = DataTable(list_of_dict)
+
+		# create from pandas dataframe
+		dt = DataTable(pandas_df)
+
+	Get Rows:
+		# get first row
+		dt[0]
+
+		# get 1-5 rows
+		dt[1: 6]
+
+	Iterate Rows:
+		for row in dt:
+			...
+
+	Get Columns:
+		col_names = dt.column_names
+
+	Get Columns Data:
+		col_name_data = dt["name"]
+
+	Get Cell Data:
+		dt[row_index][col_name]
+		dt[row_index].col_name
+	"""
+
+	def __init__(self, name = None, columns = [], rows = []):
+		"""
+
+		"""
 		self.__name = name
-		self.__columns = list(columns)
 		self.__rows = []
+		self.__columns = []
+
+		columns = list(columns)
+		for col in columns:
+			if isinstance(col, DataColumn):
+				self.__columns.append(col)
+			elif isinstance(col, str):
+				self.__columns.append(DataColumn(col))
+			else:
+				raise ArgumentTypeError(columns)
+		rows = list(rows)
+
+		for row in rows:
+			self.append(row)
 
 	def __getitem__(self, key):
+		"""
+		if key is int or slice, get rows.
+		if key is str, get column data.
+		"""
 		if isinstance(key, int) or isinstance(key, slice):
 			return self.__rows[key]
 		elif isinstance(key, str):
@@ -90,14 +143,14 @@ class DataTable(object):
 			datarow.owner_table = self
 			self.__rows.append(datarow)
 		elif isinstance(datarow, list) or isinstance(datarow, tuple):
-			self.__rows.append(DataRow(self, *datarow))
+			self.__rows.append(DataRow(self, datarow))
 		elif isinstance(datarow, dict):
 			if self.__columns is None:
 				raise RequiredFieldNoneError("columns")
 			row_data = []
 			for column in self.__columns:
 				row_data.append(datarow.get(column.name, None))
-			self.__rows.append(DataRow(self, *row_data))
+			self.__rows.append(DataRow(self, row_data))
 		else:
 			raise ArgumentTypeError(datarow, ["list", "DataRow", "dict"])
 		return self
@@ -160,9 +213,22 @@ class DataTable(object):
 		if not isinstance(dataframe, pd.DataFrame):
 			raise ArgumentTypeError(dataframe, type(pd.DataFrame))
 		self.__columns = [DataColumn(column) for column in dataframe.columns]
-		self.__rows = [DataRow(self, *[null_expr if pd.isnull(d) else d for d in row]) \
+		self.__rows = [DataRow(self, [null_expr if pd.isnull(d) else d for d in row]) \
 				 for row in dataframe.values]
 
-	def from_list(self, ls, null_expr = None, header_rows = 1):
-		self.__columns = [DataColumn(column) for column in ls[0]]
-		self.__rows = [DataRow(self, row) for row in ls[1:]]
+	@staticmethod
+	def from_list(src_list, null_expr = None):
+		"""
+		Parse DataTable from list. The first element of the source list will be as the header columns.
+
+		Args:
+			src_list:
+				The source list.
+
+		Returns:
+			DataTable
+		"""
+
+		columns = [DataColumn(column) for column in src_list[0]]
+		rows = [DataRow(data = row) for row in src_list[1:]]
+		return DataTable(name = None, columns = columns, rows = rows)

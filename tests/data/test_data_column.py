@@ -6,10 +6,10 @@ execute the unittest file in project root directory.
 """
 import sys
 sys.path.insert(0, r"../datalet")
+import unittest
 
 from datalet.data import *
-import unittest
-from tests.testing import Testing
+
 
 class DataColumnTesting(unittest.TestCase):
 
@@ -20,19 +20,18 @@ class DataColumnTesting(unittest.TestCase):
 		pass
 
 	def test_getattr(self):
-		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", dataType = type(str), nullable = True, defaultValue = 0)
+		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", data_type = type(str), nullable = True, default_value = 0)
 		self.assertTrue(col_name.name == "col_name")
 		self.assertTrue(col_name.caption == "STUDENTNAME")
 
 	def test_setattr(self):
-		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", dataType = type(str), nullable = True, defaultValue = 0)
+		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", data_type = type(str), nullable = True, default_value = 0)
 		col_name.caption = "NAMEBIGGER"
 		self.assertTrue(col_name.caption == "NAMEBIGGER")
 
 	def test_delattr(self):
-		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", dataType = type(str), nullable = True, defaultValue = 0)
+		col_name = DataColumn(name = "col_name", caption = "STUDENTNAME", data_type = type(str), nullable = True, default_value = 0)
 		del col_name.caption
-		print(col_name.caption)
 		self.assertTrue(col_name.caption == None)
 
 

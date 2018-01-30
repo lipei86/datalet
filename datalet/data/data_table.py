@@ -22,7 +22,7 @@ class DataTable(object):
 		if isinstance(key, int) or isinstance(key, slice):
 			return self.__rows[key]
 		elif isinstance(key, str):
-			return (row[str] for row in self.__rows)
+			return (row[key] for row in self.__rows)
 		else:
 			raise ArgumentTypeError(datarow, ["str", "int", "slice"])
 
@@ -162,3 +162,7 @@ class DataTable(object):
 		self.__columns = [DataColumn(column) for column in dataframe.columns]
 		self.__rows = [DataRow(self, *[null_expr if pd.isnull(d) else d for d in row]) \
 				 for row in dataframe.values]
+
+	def from_list(self, ls, null_expr = None, header_rows = 1):
+		self.__columns = [DataColumn(column) for column in ls[0]]
+		self.__rows = [DataRow(self, row) for row in ls[1:]]

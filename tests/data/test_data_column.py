@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-"""
-execute the unittest file in project root directory.
-"""
 import sys
 sys.path.insert(0, r"../datalet")
 import unittest

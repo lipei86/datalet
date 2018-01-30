@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8  -*-
 
-"""
-execute the unittest file in project root directory.
-"""
 import sys
 sys.path.insert(0, r"../datalet")
 
@@ -21,6 +18,11 @@ class DataRowTesting(unittest.TestCase):
 		ls = ['zhangsan', 20, 'abc@abc.com']
 		dr = DataRow(None, ls)
 		self.assertTrue(dr[0] == 'zhangsan')
+
+	def test_init2(self):
+		ls = ['zhangsan', 20]
+		dr = DataRow(data = ls)
+		self.assertTrue(dr[1] == 20)
 
 	def test_get_data_by_colname(self):
 		dt = DataTable(name = None, columns = ['name', 'age', 'email'])

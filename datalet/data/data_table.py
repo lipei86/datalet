@@ -16,13 +16,7 @@ class DataTable(object):
 
 	Create DataTable:
 		# create from list of list
-		dt = DataTable(list_of_list, header_rows = 1)
-
-		# create from list of dict
-		dt = DataTable(list_of_dict)
-
-		# create from pandas dataframe
-		dt = DataTable(pandas_df)
+		dt = DataTable(name = 'abc', columns = [], rows = [])
 
 	Get Rows:
 		# get first row
@@ -178,28 +172,44 @@ class DataTable(object):
 		self.__columns = [DataColumn(colname) for colname in column_names]
 
 	def clear(self):
-		''' clear the data in datatable, but not affect the columns.
-		'''
+		"""clear the data in datatable, but not affect the columns.
+		"""
 		self.__rows = []
 
 
-	def to_dict(self, key_field = "name", null_expr = None):
-		'''
-		return generator
-		'''
-		return (row.to_dict(key_field, null_expr) for row in self.__rows)
+	def to_dict(self, dict_key_field = "name", null_expr = None):
+		"""Convert DataTable to a generator of dict.
+
+		Args:
+			dict_key_field:
+				The field of DataColumn which will be used as dict key expression.
+			null_expr:
+				The expression that refers null.
+
+		Returns:
+			a generator of dict
+		"""
+		return (row.to_dict(dict_key_field, null_expr) for row in self.__rows)
 
 
 	def to_list(self):
-		'''
-		return generator
-		'''
+		"""Convert DataTable to a generator of list.
+
+		Args:
+			key_field:
+				The field of DataColumn which will be used as dict key expression.
+			null_expr:
+				The expression that refers null.
+
+		Returns:
+			a generator of list
+		"""
 		return (row.to_list() for row in self.__rows)
 
 
-	def to_pandas_dataframe(self, column_field = "name"):
+	def to_pandas_dataframe(self, dict_key_field = "name"):
 		import pandas as pd
-		column_names = [col[column_field] for col in self.__columns]
+		column_names = [col[dict_key_field] for col in self.__columns]
 		return pd.DataFrame(data = list(self.to_list()), columns = column_names)
 
 	def to_spark_dataframe(self):

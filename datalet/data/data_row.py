@@ -13,9 +13,9 @@ class DataRow(object):
 
 		Args:
 			owner_table:
-				Parent table.
+				Parent table. Default is None.
 			data:
-				Row's data.
+				Row's data. Default is empty list.
 		"""
 		self.__owner_table = owner_table
 		self.__data = list(data) if data is not None else []
@@ -76,7 +76,18 @@ class DataRow(object):
 	def append(self, value):
 		self.__data.append(value)
 
-	def to_dict(self, key_field, null_expr):
+	def to_dict(self, dict_key_field = 'name', null_expr = None):
+		"""Convert DataRow to a dict.
+
+		Args:
+			dict_key_field:
+				The field of DataColumn which will be used as dict key expression.
+			null_expr:
+				The expression that refers null.
+
+		Returns:
+			dict
+		"""
 		if self.__owner_table is None:
 			raise RequiredFieldNoneError("owner_table")
 		if self.__owner_table.columns is None:
@@ -86,7 +97,7 @@ class DataRow(object):
 		for i in range(0, len(self.__owner_table.columns)):
 			col = self.__owner_table.columns[i]
 			dat = self.__data[i]
-			row_dict[col[key_field]] = null_expr if dat is None or str(dat).strip() == "" else dat
+			row_dict[col[dict_key_field]] = null_expr if dat is None or str(dat).strip() == '' else dat
 
 		return row_dict
 

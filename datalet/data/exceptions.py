@@ -17,7 +17,6 @@ class AttributeNotFoundError(Exception):
 	def __init__(self, attr_name):
 		self.attr_name = attr_name
 
-
 class RequiredFieldNoneError(Exception):
 
 	def __init__(self, filed_name):

@@ -9,7 +9,7 @@ def get_week_date_range(date_val, start_weekday = 7):
 	'''
 	返回指定日期所在周的日期列表。
 
-	@Args:
+	Args:
 		date_val: date type or date like string.
 		start_weekday: 周的起始天。默认为7。
 			1表示以周一作为周的起始日，

@@ -6,9 +6,9 @@ import unittest
 
 def test():
 
-	# tests_utils = unittest.TestLoader().discover('tests/utils')
-	# unittest.TextTestRunner(verbosity = 2).run(tests_utils)
-    #
+	tests_utils = unittest.TestLoader().discover('tests/utils')
+	unittest.TextTestRunner(verbosity = 2).run(tests_utils)
+
 	tests_storages = unittest.TestLoader().discover('tests/storage')
 	unittest.TextTestRunner(verbosity = 2).run(tests_storages)
 

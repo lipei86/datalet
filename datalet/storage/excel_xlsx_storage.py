@@ -87,7 +87,7 @@ class ExcelXlsxStorage(BinFileStorage):
 
 		return dt
 
-	def write(self, data, overwrite = False, write_only = True, write_header = True):
+	def write(self, data, force = True, overwrite = False, include_header = True, encoding = 'utf-8', write_only = True):
 		'''
 		use write_only mode to write large data to file.
 		'''
@@ -103,7 +103,7 @@ class ExcelXlsxStorage(BinFileStorage):
 			#self.remove(force = True)
 			wb = Workbook(write_only = True)
 			ws = wb.create_sheet(title = self.sheet_name)
-			if write_header == True:
+			if include_header == True:
 				ws.append(data.column_names)
 			for row in data:
 				new_row = []
@@ -123,7 +123,7 @@ class ExcelXlsxStorage(BinFileStorage):
 			wb = load_workbook(filename = self.location)
 			ws = self.__get_worksheet(wb)
 			datarow_start_index = 1
-			if write_header == True:
+			if include_header == True:
 				for col_header_index in range(0, len(data.column_names)):
 					cell_header_data = data.column_names[col_header_index]
 					ws.cell(row = datarow_start_index, column = col_header_index + 1).value = cell_header_data

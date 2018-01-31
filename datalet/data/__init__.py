@@ -5,4 +5,3 @@ from .data_column import DataColumn
 from .data_row import DataRow
 from .data_table import DataTable
 from .data_set import DataSet
-from .exceptions import *

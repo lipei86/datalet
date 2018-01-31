@@ -21,15 +21,12 @@ class FileUtilsTesting(unittest.TestCase):
 	def test_try_read_utf8(self):
 		sql_ch_filepath = r"tests/test_data/sql_ch_utf8.sql"
 		sql_text = fus.try_read(sql_ch_filepath)
-		print(sql_text)
+		self.assertTrue(sql_text is not None)
 
 	def test_try_read_gb2312(self):
 		sql_ch_filepath = r"tests/test_data/sql_ch_gb2312.sql"
 		sql_text = fus.try_read(sql_ch_filepath)
-		print(sql_text)
-
-	# def test_get_exec_file_path(self):
-	# 	print(fus.get_exec_file_path())
+		self.assertTrue(sql_text is not None)
 
 	def test_convert_encoding(self):
 		saved_filepath = fus.convert_encoding(r"tests/test_data/sql_ch_gb2312.sql", inplace = False)

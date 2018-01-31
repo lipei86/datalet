@@ -21,37 +21,31 @@ class ListUtilsTesting(unittest.TestCase):
 	def test_split_by_group_count(self):
 		ls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		groups = list_utils.split_by_group_count(ls, group_count = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 3)
 
 	def test_split_by_group_count_2(self):
 		ls = [1, 2, 3, 4, 5, 6, 7, 8, 9]
 		groups = list_utils.split_by_group_count(ls, group_count = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 3)
 
 	def test_split_by_group_count_3(self):
 		ls = [1, 2]
 		groups = list_utils.split_by_group_count(ls, group_count = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 1)
 
 	def test_split_by_group_size(self):
 		ls = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 		groups = list_utils.split_by_group_size(ls, group_size = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 4)
 
 	def test_split_by_group_size_2(self):
 		ls = [1, 2, 3]
 		groups = list_utils.split_by_group_size(ls, group_size = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 1)
 
 	def test_split_by_group_size_3(self):
 		ls = [1, 2]
 		groups = list_utils.split_by_group_size(ls, group_size = 3)
-		print(groups)
 		self.assertTrue(len(groups) == 1)
 
 

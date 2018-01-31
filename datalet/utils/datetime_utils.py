@@ -27,21 +27,12 @@ def get_week_date_range(date_val, start_weekday = 7):
 	if not isinstance(date_val, datetime.date):
 		raise Exception('date_val is not a date')
 	week_date_range = []
-	# 周一返回0
 	cur_weekday = date_val.weekday()
 	cur_weekday += 1
-	# print('date_val cur_weekday is %d ' % cur_weekday)
-
 
 	start_timedelta = (start_weekday - cur_weekday) if cur_weekday >= start_weekday else ( start_weekday - cur_weekday - 7)
-	# print('start : %d' % start_timedelta)
 	end_timedelta = start_timedelta + 6
-	# print('end : %d' % end_timedelta)
-	# print(date_val)
-	# print(start_weekday)
-	# print(start_timedelta)
-	# print(end_timedelta)
-	# print("date: %s, end_timedelta: %d" % (date_val, end_timedelta))
+
 	for td in range(start_timedelta, end_timedelta + 1):
 		week_date = date_val + datetime.timedelta(days = td)
 		week_date_range.append(week_date)

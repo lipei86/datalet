@@ -11,6 +11,7 @@ import os
 import unittest
 
 from datalet.storage import *
+from datalet.data import *
 import datalet.utils.inspect_utils as inspect_utils
 
 #sys.setdefaultencoding('utf8')
@@ -23,97 +24,87 @@ class CsvStorageTest(unittest.TestCase):
 		self.separator = "$"
 		self.ext = ".csv"
 
+		self.dt = DataTable(columns = ['a', 'b', 'c'], rows = [[1, 2, 3]])
+
 	def tearDown(self):
 		pass
 
 	def test_create_file_not_exists(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
+		s.create(force = True)
+		self.assertTrue(os.path.exists(s.location))
 		s.remove(force = True)
-		s.create()
-		s.remove(force = True)
+		self.assertTrue(not os.path.exists(s.location))
 
 	def test_create_file_exists(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
-		s.remove(force = True)
-		s.create()
-		with self.assertRaises(StorageExistsError):
+		s.create(force = True)
+		with self.assertRaises(StorageExistedError):
 			s.create()
 		s.remove(force = True)
-
+		self.assertTrue(not os.path.exists(s.location))
 
 	def test_create_file_exists_force(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
-		s.remove(force = True)
-		s.create()
 		s.create(force = True)
+		self.assertTrue(os.path.exists(s.location))
+		s.create(force = True)
+		self.assertTrue(os.path.exists(s.location))
 		s.remove(force = True)
+		self.assertTrue(not os.path.exists(s.location))
 
 	def test_read(self):
 		s = CsvStorage(r"tests/test_data/test.csv")
 		dat = s.read(encoding = "utf-8")
 		self.assertTrue(len(dat) > 0)
-		print(">>> totol line count: ", len(dat))
-		#for row in dat:
-		#	print([cell for cell in row])
-
 
 	def test_read_limit(self):
 		s = CsvStorage(r"tests/test_data/test.csv")
-		dat = s.read(limit = 5)
-		self.assertTrue(len(dat) == 5)
+		dat = s.read(limit = 7)
+		self.assertTrue(len(dat) == 7)
 
 	def test_write_append(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
 		if not s.exists():
 			s.create()
-		dat = [["a", "b", "c"],[1, 2, 3]]
-		s.write(data = dat)
+		dat = s.read()
+		s.write(data = self.dt)
+		dat2 = s.read()
+		self.assertTrue(len(dat2) > len(dat))
 
 
 	def test_write_overwrite(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
-		s.remove(force = True)
-		s.create()
-		dat = [["a", "b", "c"],[1, 2, 3]]
-		s.write(data = dat, overwrite = True)
-
-	def test_copy(self):
-		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
-		s = CsvStorage(self.tmpdir + testfile)
-		s.remove(force = True)
-		s.create()
-		dat = [["a1", "b1", "c1"],[1, 2, 3]]
-		s.write(data = dat, overwrite = True)
-		s.copy()
-		newfilename = self.classname + self.separator + inspect_utils.get_current_func_name() + FileStorage.POSTFIX + self.ext
-		self.assertTrue(os.path.exists(self.tmpdir + newfilename))
-		s.remove()
+		s.create(force = True)
+		s.write(data = self.dt, overwrite = True)
+		dat = s.read()
+		self.assertTrue(len(dat) == 2)
 
 	def test_copy_path(self):
 		testfile = self.classname + self.separator + inspect_utils.get_current_func_name() + self.ext
 		s = CsvStorage(self.tmpdir + testfile)
-		s.remove(force = True)
-		s.create()
-		dat = [["a11", "b11", "c11"],[1, 2, 3]]
-		s.write(data = dat, overwrite = True)
+		s.create(force = True)
+		s.write(data = self.dt, overwrite = True)
 		newpath = self.tmpdir + os.path.sep + "test_copy2.csv"
-		s.copy(path = newpath)
+		s.copy(copy_to_path = newpath)
 		self.assertTrue(os.path.exists(newpath))
 		s.remove()
 		CsvStorage(newpath).remove()
+		self.assertTrue(not os.path.exists(newpath))
 
 	def test_remove(self):
 		with self.assertRaises(StorageNotFoundError):
 			s = CsvStorage(r"tests/test_data/test_notexists.csv")
 			s.remove()
 		s = CsvStorage(r"tests/test_data/test_todel.csv")
-		s.create()
-		s.remove()
+		s.create(force = True)
+		s.remove(force = True)
+		self.assertTrue(not os.path.exists(s.location))
 
 	def test_clear(self):
 		pass

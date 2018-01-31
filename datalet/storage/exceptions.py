@@ -21,12 +21,12 @@ class ForeignRelationExistedError(Exception):
 	def __init__(self, location):
 		self.location = location
 
-class ArgumentsAbsenceError(Exception):
+class ArgumentAbsenceError(Exception):
 
 	def __init__(self, argname):
 		self.argname = argname
 
-class ArgumentsTypeError(Exception):
+class ArgumentTypeError(Exception):
 
 	def __init__(self, argname):
 		self.argname = argname

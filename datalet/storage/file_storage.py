@@ -6,7 +6,7 @@ import os.path
 from abc import ABCMeta,abstractmethod
 
 from datalet.storage.storage import Storage
-from datalet.exceptions import *
+from datalet.storage.exceptions import *
 
 class FileStorage(Storage, metaclass = ABCMeta):
 
@@ -47,7 +47,7 @@ class FileStorage(Storage, metaclass = ABCMeta):
 		if not self.exists():
 			raise StorageNotFoundError(self.location)
 		if copy_to_path is None:
-			raise ArgumentsAbsenceError('copy_to_path')
+			raise ArgumentAbsenceError('copy_to_path')
 
 		import shutil
 		shutil.copyfile(self.location, copy_to_path)

@@ -13,7 +13,15 @@ class Storage(object, metaclass = ABCMeta):
 				When the storage is a file, the location is filepath;
 				When the storage is a database, the location is sqlalchemy url.
 		"""
-		self.location = location
+		self.__location = location
+
+	@property
+	def location(self):
+		return self.__location
+
+	@location.setter
+	def location(self, val):
+		self.__location = val
 
 	@abstractmethod
 	def exists(self):

@@ -119,3 +119,7 @@ def convert_encoding(filepath, src_encoding = None, target_encoding = "utf-8", i
 		return tosave_filepath
 	else:
 		raise Exception
+
+def create_file(filepath, encoding='utf-8'):
+	with open(filepath, 'w', encoding = encoding) as file:
+		pass
